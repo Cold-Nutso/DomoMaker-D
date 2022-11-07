@@ -6,10 +6,6 @@ const loginPage = (req, res) => {
   res.render('login', { csrfToken: req.csrfToken() });
 };
 
-const signupPage = (req, res) => {
-  res.render('signup', { csrfToken: req.csrfToken() });
-};
-
 const logout = (req, res) => {
   req.session.destroy();
   res.redirect('/');
@@ -20,7 +16,7 @@ const login = (req, res) => {
   const pass = `${req.body.pass}`;
 
   if (!username || !pass) {
-    return res.status(400).json({ error: 'All field are required!' });
+    return res.status(400).json({ error: 'All fields are required!' });
   }
 
   return Account.authenticate(username, pass, (err, account) => {
@@ -61,10 +57,14 @@ const signup = async (req, res) => {
   }
 };
 
+const getToken = (req, res) => {
+  return res.json({csrfToken: req.csrfToken()});
+};
+
 module.exports = {
   loginPage,
-  signupPage,
   login,
   logout,
   signup,
+  getToken
 };
