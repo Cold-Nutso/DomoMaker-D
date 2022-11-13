@@ -62,8 +62,8 @@ const init = () => {
   }
 
   /* If this page has the domoForm, add it's submit event listener.
-     Event listener will grab the domo name and the domo age from
-     the form. It will throw an error if one or both are missing.
+     Event listener will grab the domo name, age, and food from
+     the form. It will throw an error if any are missing.
      Otherwise, it will send the request to the server.
   */
   if(domoForm) {
@@ -73,14 +73,15 @@ const init = () => {
 
       const name = domoForm.querySelector('#domoName').value;
       const age = domoForm.querySelector('#domoAge').value;
+      const food = domoForm.querySelector('#domoFood').value;
       const _csrf = signupForm.querySelector('#_csrf').value;
 
-      if(!name || !age) {
-        handleError('All fields are required!');
-        return false;
+      if (!name || !age || !food) {
+          helper.handleError('All fields are required!');
+          return false;
       }
 
-      sendPost(domoForm.getAttribute('action'), {name, age, _csrf});
+      sendPost(domoForm.getAttribute('action'), {name, age, food, _csrf});
       return false;
     });
   }

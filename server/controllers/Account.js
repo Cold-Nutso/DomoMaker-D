@@ -57,14 +57,12 @@ const signup = async (req, res) => {
   }
 };
 
-const getToken = (req, res) => {
-  return res.json({csrfToken: req.csrfToken()});
-};
+const getToken = (req, res) => res.json({ csrfToken: req.csrfToken() });
 
 module.exports = {
   loginPage,
   login,
   logout,
   signup,
-  getToken
+  getToken,
 };
