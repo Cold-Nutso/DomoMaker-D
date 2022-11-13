@@ -38,6 +38,27 @@ const handleDomo = (e) => {
     return false;
 };
 
+const handleDeleteDomo = (e) => {
+    e.preventDefault();
+    helper.hideError();
+
+    const domoDisplay = e.target.parentNode;
+    const _id = domoDisplay.dataset.key;
+    const _csrf = document.querySelector('#_csrf').value;
+
+    if (!_id) {
+        helper.handleError("Couldn't find the key.");
+        return false;
+    }
+
+    helper.sendPost(e.target.action, { _id, _csrf }, loadDomosFromServer);
+
+    // This is redundant, but it just wouldn't update properly otherwise
+    loadDomosFromServer();
+
+    return false;
+};
+
 const DomoForm = (props) => {
     return (
         <form id="domoForm"
@@ -70,11 +91,20 @@ const DomoList = (props) => {
 
     const domoNodes = props.domos.map(domo => {
         return (
-            <div key={domo.id} className="domo">
+            <div key={domo._id} data-key={domo._id} className="domo">
                 <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
                 <h3 className="domoName"> Name: {domo.name} </h3>
                 <h3 className="domoAge"> Age: {domo.age} </h3>
                 <h3 className="domoFood"> Favorite Food: {domo.food} </h3>
+                <form
+                    onSubmit={handleDeleteDomo}
+                    name="deleteForm"
+                    action="/delete"
+                    method="POST"
+                    className="deleteForm"
+                >
+                    <input className="deleteDomoSubmit" type="submit" value="DELETE" />
+                </form>
             </div>
         );
     });

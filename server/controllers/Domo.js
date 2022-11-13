@@ -1,3 +1,9 @@
+const mongoose = require('mongoose');
+
+// Create a model just to delete domos
+mongoose.model('Deletor', new mongoose.Schema({}), 'domos');
+const deletor = mongoose.model('Deletor');
+
 const models = require('../models');
 
 const { Domo } = models;
@@ -29,6 +35,21 @@ const makeDomo = async (req, res) => {
   }
 };
 
+const deleteDomo = async (req, res) => {
+  if (!req.body._id) {
+    return res.status(400).json({ error: 'Missing domo id.' });
+  }
+
+  try {
+    await deletor.deleteOne({ _id: mongoose.Types.ObjectId(req.body._id) });
+
+    return res.status(200).json({ message: 'Domo successfully deleted.' });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: 'An error occurred' });
+  }
+};
+
 const getDomos = (req, res) => {
   Domo.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
@@ -43,5 +64,6 @@ const getDomos = (req, res) => {
 module.exports = {
   makerPage,
   makeDomo,
+  deleteDomo,
   getDomos,
 };
